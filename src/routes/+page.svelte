@@ -1,59 +1,47 @@
 <script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+	import { onMount } from 'svelte';
+
+	let collections = [];
+	let newCollectionTitle = '';
+
+	onMount(() => {
+		const storedCollections = localStorage.getItem('collections');
+		if (storedCollections) {
+			collections = JSON.parse(storedCollections);
+		}
+	});
+
+	function createCollection() {
+		if (newCollectionTitle.trim()) {
+			collections = [...collections, { id: Date.now(), title: newCollectionTitle.trim() }];
+			localStorage.setItem('collections', JSON.stringify(collections));
+			newCollectionTitle = '';
+		}
+	}
 </script>
 
-<svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
-</svelte:head>
+<div class="container mx-auto p-4">
+	<h1 class="text-2xl font-bold mb-4">Collection Manager</h1>
 
-<section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
+	<div class="mb-4">
+		<input
+			type="text"
+			bind:value={newCollectionTitle}
+			placeholder="Enter collection title"
+			class="border p-2 mr-2"
+		/>
+		<button on:click={createCollection} class="bg-blue-500 text-white px-4 py-2 rounded">
+			Create Collection
+		</button>
+	</div>
 
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
-</section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
-</style>
+	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+		{#each collections as collection (collection.id)}
+			<a href={`/collections/${collection.id}`}>
+				<div class="bg-white shadow rounded p-4">
+					<h2 class="text-xl font-semibold">{collection.title}</h2>
+				</div>
+			</a>
+		{/each}
+	</div>
+</div>
