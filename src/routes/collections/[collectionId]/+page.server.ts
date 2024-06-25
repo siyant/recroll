@@ -1,24 +1,28 @@
-import { request } from '@playwright/test';
-import {
-	addBookmarkToCollection,
-	getBookmarksByCollectionId,
-	type Bookmark
-} from './collectionsDb';
+import { type Bookmark } from './collectionsDb';
+import db from '$lib/db';
+import type { Actions, PageServerLoad } from './$types';
 
-export const load = ({ params }) => {
-	const bookmarks = getBookmarksByCollectionId(params.collectionId);
-	return { bookmarks };
+export const load: PageServerLoad = async ({ params }) => {
+	const { data } = await db.from('item').select().eq('collection_id', params.collectionId);
+	console.log('bookmarks :>> ', data);
+	return { bookmarks: data };
 };
 
-export const actions = {
-	addbookmark: async ({ request, params }) => {
+export const actions: Actions = {
+	create: async ({ request, params }) => {
 		const data = await request.formData();
 		const bookmark: Bookmark = {
-			title: data.get('title'),
+			name: data.get('name'),
 			url: data.get('url'),
 			rating: data.get('rating'),
-			comments: data.get('comments')
+			note: data.get('note'),
+			collection_id: params.collectionId
 		};
-		addBookmarkToCollection(params.collectionId, bookmark);
+		const { data: created, error } = await db.from('item').insert(bookmark);
+		if (error) {
+			console.log('error :>> ', error);
+		} else {
+			return { ok: true };
+		}
 	}
 };

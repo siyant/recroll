@@ -1,20 +1,20 @@
 <script>
 	export let data;
 
-  let title = '';
+  let name = '';
   let url = '';
   let rating = 1;
-  let comments = '';
+  let note = '';
 </script>
 
 <main>
   <h1>Bookmark Manager</h1>
 	{JSON.stringify(data.bookmarks)}
   
-  <form method="POST" action="?/addbookmark">
+  <form method="POST" action="?/create">
     <div>
-      <label for="title">Title:</label>
-      <input id="title" name="title" bind:value={title} required>
+      <label for="name">Name:</label>
+      <input id="name" name="name" bind:value={name} required>
     </div>
     <div>
       <label for="url">URL:</label>
@@ -30,8 +30,8 @@
       </select>
     </div>
     <div>
-      <label for="comments">Comments:</label>
-      <textarea id="comments" name="comments" bind:value={comments}></textarea>
+      <label for="note">note:</label>
+      <textarea id="note" name="note" bind:value={note}></textarea>
     </div>
     <button type="submit">Add Bookmark</button>
   </form>
@@ -41,13 +41,13 @@
     {#each data.bookmarks as bookmark}
       <li>
         <div class="bookmark-info">
-          <strong>{bookmark.title}</strong> - 
+          <strong>{bookmark.name}</strong> - 
           <a href={bookmark.url} target="_blank" rel="noopener noreferrer">{bookmark.url}</a>
           <br>
           Rating: {bookmark.rating}/4
-          {#if bookmark.comments}
+          {#if bookmark.note}
             <br>
-            Comments: {bookmark.comments}
+            Notes: {bookmark.note}
           {/if}
         </div>
         {#if bookmark.preview}
