@@ -1,146 +1,116 @@
-<script>
-	export let data;
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
+	import { Textarea } from '$lib/components/ui/textarea';
 
-  let name = '';
-  let url = '';
-  let rating = 1;
-  let note = '';
+	export let data;
+	console.log('data :>> ', JSON.parse(JSON.stringify(data)));
+
+	let addingRec = false;
+	let name = '';
+	let url = '';
+	let note = '';
+	let rating: number | null = null;
+
+	$: name.length > 0 ? (addingRec = true) : (addingRec = false);
 </script>
 
 <main>
-  <h1>Bookmark Manager</h1>
-	{JSON.stringify(data.bookmarks)}
-  
-  <form method="POST" action="?/create">
-    <div>
-      <label for="name">Name:</label>
-      <input id="name" name="name" bind:value={name} required>
-    </div>
-    <div>
-      <label for="url">URL:</label>
-      <input id="url" name="url" type="url" bind:value={url} required>
-    </div>
-    <div>
-      <label for="rating">Rating:</label>
-      <select id="rating" name="rating" bind:value={rating}>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
-    <div>
-      <label for="note">note:</label>
-      <textarea id="note" name="note" bind:value={note}></textarea>
-    </div>
-    <button type="submit">Add Bookmark</button>
-  </form>
+	<h1 class="text-2xl font-bold mb-6">{data.collection.name}</h1>
 
-  <h2>Saved Bookmarks</h2>
-  <ul>
-    {#each data.bookmarks as bookmark}
-      <li>
-        <div class="bookmark-info">
-          <strong>{bookmark.name}</strong> - 
-          <a href={bookmark.url} target="_blank" rel="noopener noreferrer">{bookmark.url}</a>
-          <br>
-          Rating: {bookmark.rating}/4
-          {#if bookmark.note}
-            <br>
-            Notes: {bookmark.note}
-          {/if}
-        </div>
-        {#if bookmark.preview}
-          <div class="link-preview">
-            {#if bookmark.preview.image}
-              <img src={bookmark.preview.image} alt="Link preview" />
-            {/if}
-            <div class="preview-content">
-              <h3>{bookmark.preview.title}</h3>
-              <p>{bookmark.preview.description}</p>
-            </div>
-          </div>
-        {/if}
-      </li>
-    {/each}
-  </ul>
+	<div class="border rounded-md p-4">
+		<h2 class="text-lg font-bold mb-4">add a rec</h2>
+		<form class="grid gap-4" method="POST" action="?/create">
+			<div class="grid gap-2">
+				<Input id="name" name="name" required placeholder="name of the thing" bind:value={name} />
+			</div>
+			<div class={`grid gap-4 animated ${addingRec ? 'avisible' : 'ahidden'}`}>
+				<div class="grid gap-2">
+					<Label for="rating">how awesome is this thing?</Label>
+					<div class="flex items-center gap-2">
+						<Input
+							id="rating"
+							name="rating"
+							bind:value={rating}
+							type="number"
+							class="w-20"
+							min="0"
+							max="4"
+							placeholder="1-4"
+						/>
+						{#if rating == 1}💩
+						{:else if rating == 2}🆗
+						{:else if rating == 3}👍
+						{:else if rating == 4}🔥
+						{:else}🤷‍♂️{/if}
+					</div>
+				</div>
+				<div class="grid gap-2">
+					<Label for="url">url</Label>
+					<Input
+						id="url"
+						name="url"
+						type="url"
+						placeholder="enter url (optional)"
+						bind:value={url}
+					/>
+				</div>
+				<div class="grid gap-2">
+					<Label for="note">notes</Label>
+					<Textarea id="note" name="note" placeholder="what's good? any tips?" bind:value={note} />
+				</div>
+
+				<Button type="submit" class="w-full">save rec</Button>
+			</div>
+		</form>
+	</div>
+
+	<div class="mt-8">
+		{#each data.bookmarks as bookmark}
+			<div class="mb-6">
+				<h3 class="text-xl font-semibold mb-2">
+					<span class="mr-2">
+						{#if bookmark.rating == 1}💩
+						{:else if bookmark.rating == 2}🆗
+						{:else if bookmark.rating == 3}👍
+						{:else if bookmark.rating == 4}🔥
+						{:else}🤷‍♂️{/if}
+					</span>{bookmark.name}
+				</h3>
+				<p class="text-sm text-primary underline text-muted-foreground mb-4">
+					<a href={bookmark.url} target="_blank">{bookmark.url}</a>
+				</p>
+				<p class="">
+					{bookmark.note}
+				</p>
+			</div>
+		{/each}
+	</div>
 </main>
 
 <style>
 	main {
-		font-family: Arial, sans-serif;
-		max-width: 600px;
-		margin: 0 auto;
-		padding: 20px;
+		@apply mx-auto px-4 md:px-6 max-w-2xl py-12;
 	}
 
-	form {
-		display: grid;
-		gap: 10px;
-		margin-bottom: 20px;
+	.animated {
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.5s ease-in-out,
+			visibility 0.5s ease-in-out;
 	}
 
-	label {
-		font-weight: bold;
+	.avisible {
+		opacity: 1;
+		visibility: visible;
 	}
 
-	input,
-	select,
-	textarea {
-		width: 100%;
-		padding: 5px;
-	}
-
-	button {
-		background-color: #4caf50;
-		color: white;
-		padding: 10px;
-		border: none;
-		cursor: pointer;
-	}
-
-	button:hover {
-		background-color: #45a049;
-	}
-
-	ul {
-		list-style-type: none;
-		padding: 0;
-	}
-
-	li {
-		margin-bottom: 20px;
-		border-bottom: 1px solid #ccc;
-		padding-bottom: 20px;
-	}
-
-	.link-preview {
-		display: flex;
-		margin-top: 10px;
-		border: 1px solid #ddd;
-		border-radius: 4px;
-		overflow: hidden;
-	}
-
-	.link-preview img {
-		width: 100px;
-		height: 100px;
-		object-fit: cover;
-	}
-
-	.preview-content {
-		padding: 10px;
-		flex-grow: 1;
-	}
-
-	.preview-content h3 {
-		margin: 0 0 5px 0;
-		font-size: 16px;
-	}
-
-	.preview-content p {
-		margin: 0;
-		font-size: 14px;
-		color: #666;
+	.ahidden {
+		opacity: 0;
+		visibility: hidden;
+		max-height: 0;
+		transition: max-height 0.5s ease-in-out;
 	}
 </style>
