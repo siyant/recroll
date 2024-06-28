@@ -1,11 +1,12 @@
-export interface Bookmark {
+export interface Rec {
 	name: string;
 	url: string;
 	rating: number;
 	note: string;
 }
 
-interface Collection {
+interface Roll {
 	id: string;
-	bookmarks: Bookmark[];
+	name: string;
+	recs: Rec[];
 }

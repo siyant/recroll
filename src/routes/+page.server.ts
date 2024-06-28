@@ -5,7 +5,7 @@ import type { Actions, PageServerLoad } from './$types';
 export const load: PageServerLoad = async () => {
 	const { data, error } = await db.from('collection').select();
 	console.log('load collections data :>> ', data);
-	return { collections: data };
+	return { rolls: data };
 };
 
 export const actions: Actions = {
@@ -19,7 +19,7 @@ export const actions: Actions = {
 		if (error) {
 			console.log('error :>> ', error);
 		} else {
-			redirect(303, `/collections/${created[0].id}`);
+			redirect(303, `/rolls/${created[0].id}`);
 		}
 	}
 };

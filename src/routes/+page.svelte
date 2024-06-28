@@ -5,16 +5,16 @@
 
 	export let data;
 	let name = '';
-	let addingCollection = false;
+	let showCreateForm = false;
 
-	$: addingCollection = name.length > 0;
+	$: showCreateForm = name.length > 0;
 </script>
 
 <main>
-	<h1>your collections</h1>
+	<h1>your recs</h1>
 
 	<div class="border rounded-md p-4 mb-4">
-		<h2>create a collection</h2>
+		<h2>create a rec roll</h2>
 		<form class="grid gap-4" method="POST" action="?/create">
 			<div class="grid gap-2">
 				<Input
@@ -25,16 +25,16 @@
 					bind:value={name}
 				/>
 			</div>
-			<div class="animated {addingCollection ? 'avisible' : 'ahidden'}">
-				<Button type="submit" class="w-full">create collection</Button>
+			<div class="animated {showCreateForm ? 'avisible' : 'ahidden'}">
+				<Button type="submit" class="w-full">create</Button>
 			</div>
 		</form>
 	</div>
 
-	{#each data.collections as collection (collection.id)}
+	{#each data.rolls as roll (roll.id)}
 		<div>
-			<a href={`/collections/${collection.id}`}>
-				<h2>{collection.name}</h2>
+			<a href={`/rolls/${roll.id}`}>
+				<h2>{roll.name}</h2>
 			</a>
 		</div>
 	{/each}

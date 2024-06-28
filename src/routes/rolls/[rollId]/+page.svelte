@@ -5,19 +5,18 @@
 	import { Textarea } from '$lib/components/ui/textarea';
 
 	export let data;
-	console.log('data :>> ', JSON.parse(JSON.stringify(data)));
 
-	let addingRec = false;
+	let showCreateForm = false;
 	let name = '';
 	let url = '';
 	let note = '';
 	let rating: number | null = null;
 
-	$: name.length > 0 ? (addingRec = true) : (addingRec = false);
+	$: name.length > 0 ? (showCreateForm = true) : (showCreateForm = false);
 </script>
 
 <main>
-	<h1>{data.collection.name}</h1>
+	<h1>{data.roll.name}</h1>
 
 	<div class="border rounded-md p-4">
 		<h2>add a rec</h2>
@@ -25,7 +24,7 @@
 			<div class="grid gap-2">
 				<Input id="name" name="name" required placeholder="name of the thing" bind:value={name} />
 			</div>
-			<div class={`grid gap-4 animated ${addingRec ? 'avisible' : 'ahidden'}`}>
+			<div class={`grid gap-4 animated ${showCreateForm ? 'avisible' : 'ahidden'}`}>
 				<div class="grid gap-2">
 					<Label for="rating">how awesome is this thing?</Label>
 					<div class="flex items-center gap-2">
@@ -67,22 +66,22 @@
 	</div>
 
 	<div class="mt-2">
-		{#each data.bookmarks as bookmark}
+		{#each data.recs as rec}
 			<div class="border-b py-6">
 				<h3>
 					<span class="mr-2">
-						{#if bookmark.rating == 1}💩
-						{:else if bookmark.rating == 2}🆗
-						{:else if bookmark.rating == 3}👍
-						{:else if bookmark.rating == 4}🔥
+						{#if rec.rating == 1}💩
+						{:else if rec.rating == 2}🆗
+						{:else if rec.rating == 3}👍
+						{:else if rec.rating == 4}🔥
 						{:else}🤷‍♂️{/if}
-					</span>{bookmark.name}
+					</span>{rec.name}
 				</h3>
 				<p class="text-sm underline text-muted-foreground mb-4">
-					<a href={bookmark.url} target="_blank">{bookmark.url}</a>
+					<a href={rec.url} target="_blank">{rec.url}</a>
 				</p>
 				<p>
-					{bookmark.note}
+					{rec.note}
 				</p>
 			</div>
 		{/each}
