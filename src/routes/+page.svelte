@@ -1,31 +1,67 @@
 <script>
+	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
+
 	export let data;
+	let name = '';
+	let addingCollection = false;
+
+	$: addingCollection = name.length > 0;
 </script>
 
-<div class="container mx-auto p-4">
-	<h1 class="text-2xl font-bold mb-4">Collection Manager</h1>
+<main>
+	<h1>your collections</h1>
 
-	<div class="mb-4">
-		<form method="POST" action="?/create">
-		<input
-			type="text"
-			name="name"
-			placeholder="Enter collection name"
-			class="border p-2 mr-2"
-		/>
-		<button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-			Create Collection
-		</button>
-	</form>
+	<div class="border rounded-md p-4 mb-4">
+		<h2>create a collection</h2>
+		<form class="grid gap-4" method="POST" action="?/create">
+			<div class="grid gap-2">
+				<Input
+					id="name"
+					name="name"
+					type="text"
+					placeholder="eg. coffee places in sg, baking recipes, etc"
+					bind:value={name}
+				/>
+			</div>
+			<div class="animated {addingCollection ? 'avisible' : 'ahidden'}">
+				<Button type="submit" class="w-full">create collection</Button>
+			</div>
+		</form>
 	</div>
 
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-		{#each data.collections as collection (collection.id)}
+	{#each data.collections as collection (collection.id)}
+		<div>
 			<a href={`/collections/${collection.id}`}>
-				<div class="bg-white shadow rounded p-4">
-					<h2 class="text-xl font-semibold">{collection.name}</h2>
-				</div>
+				<h2>{collection.name}</h2>
 			</a>
-		{/each}
-	</div>
-</div>
+		</div>
+	{/each}
+</main>
+
+<style>
+	main {
+		@apply mx-auto px-4 md:px-6 max-w-2xl py-12;
+	}
+
+	.animated {
+		opacity: 0;
+		visibility: hidden;
+		transition:
+			opacity 0.5s ease-in-out,
+			visibility 0.5s ease-in-out;
+	}
+
+	.avisible {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	.ahidden {
+		opacity: 0;
+		visibility: hidden;
+		max-height: 0;
+		transition: max-height 0.5s ease-in-out;
+	}
+</style>

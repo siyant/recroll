@@ -17,10 +17,10 @@
 </script>
 
 <main>
-	<h1 class="text-2xl font-bold mb-6">{data.collection.name}</h1>
+	<h1>{data.collection.name}</h1>
 
 	<div class="border rounded-md p-4">
-		<h2 class="text-lg font-bold mb-4">add a rec</h2>
+		<h2>add a rec</h2>
 		<form class="grid gap-4" method="POST" action="?/create">
 			<div class="grid gap-2">
 				<Input id="name" name="name" required placeholder="name of the thing" bind:value={name} />
@@ -66,10 +66,10 @@
 		</form>
 	</div>
 
-	<div class="mt-8">
+	<div class="mt-2">
 		{#each data.bookmarks as bookmark}
-			<div class="mb-6">
-				<h3 class="text-xl font-semibold mb-2">
+			<div class="border-b py-6">
+				<h3>
 					<span class="mr-2">
 						{#if bookmark.rating == 1}💩
 						{:else if bookmark.rating == 2}🆗
@@ -78,10 +78,10 @@
 						{:else}🤷‍♂️{/if}
 					</span>{bookmark.name}
 				</h3>
-				<p class="text-sm text-primary underline text-muted-foreground mb-4">
+				<p class="text-sm underline text-muted-foreground mb-4">
 					<a href={bookmark.url} target="_blank">{bookmark.url}</a>
 				</p>
-				<p class="">
+				<p>
 					{bookmark.note}
 				</p>
 			</div>
