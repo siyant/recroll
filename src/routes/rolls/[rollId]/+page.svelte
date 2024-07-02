@@ -80,7 +80,7 @@
 				<p class="text-sm underline text-muted-foreground mb-4">
 					<a href={rec.url} target="_blank">{rec.url}</a>
 				</p>
-				<p>
+				<p class="whitespace-pre-wrap">
 					{rec.note}
 				</p>
 			</div>
