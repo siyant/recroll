@@ -16,6 +16,7 @@
 </script>
 
 <main>
+	<a href="/"><h3 class="absolute top-4 left-4 text-muted-foreground">{'<'} more recs</h3></a>
 	<h1>{data.roll.name}</h1>
 
 	<div class="border rounded-md p-4">

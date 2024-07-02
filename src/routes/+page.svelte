@@ -11,7 +11,7 @@
 </script>
 
 <main>
-	<h1>your recs</h1>
+	<h1>recroll</h1>
 
 	<div class="border rounded-md p-4 mb-4">
 		<h2>create a rec roll</h2>
