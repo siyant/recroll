@@ -1,16 +1,17 @@
-import db from '$lib/db';
 import type { Actions, PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params }) => {
-	const { data: rollData, error } = await db.from('collection').select().eq('id', params.rollId);
+export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
+	const { data: rollData, error } = await supabase
+		.from('collection')
+		.select()
+		.eq('id', params.rollId);
 
-	const { data } = await db.from('item').select().eq('collection_id', params.rollId);
-	console.log('recs :>> ', data);
-	return { recs: data, roll: rollData[0] };
+	const { data } = await supabase.from('item').select().eq('collection_id', params.rollId);
+	return { recs: data, roll: rollData && rollData.length > 0 ? rollData[0] : [] };
 };
 
 export const actions: Actions = {
-	create: async ({ request, params }) => {
+	create: async ({ request, params, locals: { supabase } }) => {
 		const data = await request.formData();
 		console.log('data :>> ', Object.fromEntries(data));
 		const bookmark = {
@@ -20,7 +21,7 @@ export const actions: Actions = {
 			note: data.get('note'),
 			collection_id: params.rollId
 		};
-		const { data: created, error } = await db.from('item').insert(bookmark);
+		const { data: created, error } = await supabase.from('item').insert(bookmark);
 		if (error) {
 			console.log('error :>> ', error);
 		} else {

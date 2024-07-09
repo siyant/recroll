@@ -1,7 +1,6 @@
 <script>
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
 
 	export let data;
 	let name = '';
