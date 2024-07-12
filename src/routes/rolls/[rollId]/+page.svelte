@@ -21,7 +21,7 @@
 		{#each data.recs as rec (rec.id)}
 			<div class="rec-card border-b py-6">
 				{#if rec.id === editingId}
-					<RecForm action="?/update" {rec} />
+					<RecForm action="?/update" deleteAction="?/delete" {rec} />
 				{:else}
 					<h3>
 						<span class="mr-2">

@@ -48,7 +48,19 @@ export const actions: Actions = {
 			console.log('error :>> ', error);
 		} else {
 			console.log(request.url);
-			throw redirect(303, new URL(request.url).pathname);
+			return { success: true };
+		}
+	},
+	delete: async ({ request, params, locals: { supabase } }) => {
+		const data = await request.formData();
+
+		const recId = data.get('id');
+		const { error } = await supabase.from('item').delete().eq('id', recId);
+		if (error) {
+			console.log('error :>> ', error);
+		} else {
+			console.log(request.url);
+			return { success: true };
 		}
 	}
 };

@@ -7,6 +7,7 @@
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
 	import type { Rec } from '$lib/types';
+	import { Trash2 } from 'lucide-svelte';
 
 	export let rec: Rec = {
 		id: null,
@@ -15,7 +16,8 @@
 		rating: 0,
 		note: ''
 	};
-	export let action;
+	export let action: string;
+	export let deleteAction: string | null = null;
 
 	let id = rec.id;
 	let name = rec.name;
@@ -25,6 +27,8 @@
 
 	let showShortenedForm = rec.id == null; // for new recs, show the shortened form
 	$: showShortenedForm = name.length === 0 && url.length === 0 && note.length === 0 && rating === 0;
+
+	const showDeleteButton = rec.id !== null;
 </script>
 
 <form class="grid gap-4" method="POST" {action} use:enhance>
@@ -62,9 +66,19 @@
 		</div>
 
 		<input type="hidden" name="id" value={id} />
-		<Button type="submit" class="w-full">save rec</Button>
+		<Button type="submit">save rec</Button>
 	</div>
 </form>
+
+{#if showDeleteButton}
+	<form method="POST" action={deleteAction} class="mt-2" use:enhance>
+		<input type="hidden" name="id" value={id} />
+		<Button type="submit" variant="destructive">
+			<Trash2 class="w-4 h-4 mr-2" />
+			delete rec</Button
+		>
+	</form>
+{/if}
 
 <style>
 	.animated {
