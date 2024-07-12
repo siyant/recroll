@@ -1,4 +1,5 @@
 export interface Rec {
+	id: number | null;
 	name: string;
 	url: string;
 	rating: number;
