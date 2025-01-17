@@ -1,34 +1,38 @@
-import { redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
+import supabase from "$lib/db";
+import type { Actions, PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ params, locals: { supabase } }) => {
+export const load: PageServerLoad = async ({ params }) => {
 	const { data: rollData, error } = await supabase
-		.from('collection')
+		.from("rolls")
 		.select()
-		.eq('id', params.rollId);
+		.eq("id", params.rollId);
 
 	const { data } = await supabase
-		.from('item')
+		.from("recs")
 		.select()
-		.eq('collection_id', params.rollId)
-		.order('id');
-	return { recs: data ?? [], roll: rollData && rollData.length > 0 ? rollData[0] : [] };
+		.eq("roll_id", params.rollId)
+		.order("id");
+	return {
+		recs: data ?? [],
+		roll: rollData && rollData.length > 0 ? rollData[0] : [],
+	};
 };
 
 export const actions: Actions = {
-	create: async ({ request, params, locals: { supabase } }) => {
+	create: async ({ request, params }) => {
 		const data = await request.formData();
 
 		const rec = {
-			name: data.get('name'),
-			url: data.get('url'),
-			rating: data.get('rating') || 0,
-			note: data.get('note'),
-			collection_id: params.rollId
+			name: data.get("name"),
+			url: data.get("url"),
+			rating: data.get("rating") || 0,
+			description: data.get("description"),
+			roll_id: params.rollId,
 		};
-		const { error } = await supabase.from('item').insert(rec);
+		console.log("rec :>>", rec);
+		const { error } = await supabase.from("recs").insert(rec);
 		if (error) {
-			console.log('error :>> ', error);
+			console.log("error :>> ", error);
 		} else {
 			return { success: true };
 		}
@@ -36,16 +40,19 @@ export const actions: Actions = {
 	update: async ({ request, params, locals: { supabase } }) => {
 		const data = await request.formData();
 
-		const recId = data.get('id');
+		const recId = data.get("id");
 		const recUpdatedValues = {
-			name: data.get('name'),
-			url: data.get('url'),
-			rating: data.get('rating') || 0,
-			note: data.get('note')
+			name: data.get("name"),
+			url: data.get("url"),
+			rating: data.get("rating") || 0,
+			description: data.get("description"),
 		};
-		const { error } = await supabase.from('item').update(recUpdatedValues).eq('id', recId);
+		const { error } = await supabase
+			.from("recs")
+			.update(recUpdatedValues)
+			.eq("id", recId);
 		if (error) {
-			console.log('error :>> ', error);
+			console.log("error :>> ", error);
 		} else {
 			console.log(request.url);
 			return { success: true };
@@ -54,13 +61,13 @@ export const actions: Actions = {
 	delete: async ({ request, params, locals: { supabase } }) => {
 		const data = await request.formData();
 
-		const recId = data.get('id');
-		const { error } = await supabase.from('item').delete().eq('id', recId);
+		const recId = data.get("id");
+		const { error } = await supabase.from("recs").delete().eq("id", recId);
 		if (error) {
-			console.log('error :>> ', error);
+			console.log("error :>> ", error);
 		} else {
 			console.log(request.url);
 			return { success: true };
 		}
-	}
+	},
 };

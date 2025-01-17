@@ -14,7 +14,7 @@
 		name: '',
 		url: '',
 		rating: 0,
-		note: ''
+		description: ''
 	};
 	export let action: string;
 	export let deleteAction: string | null = null;
@@ -22,11 +22,12 @@
 	let id = rec.id;
 	let name = rec.name;
 	let url = rec.url;
-	let note = rec.note;
+	let description = rec.description;
 	let rating = rec.rating;
 
 	let showShortenedForm = rec.id == null; // for new recs, show the shortened form
-	$: showShortenedForm = name.length === 0 && url.length === 0 && note.length === 0 && rating === 0;
+	$: showShortenedForm =
+		name.length === 0 && url.length === 0 && description.length === 0 && rating === 0;
 
 	const showDeleteButton = rec.id !== null;
 </script>
@@ -61,8 +62,13 @@
 			<Input id="url" name="url" type="url" placeholder="enter url (optional)" bind:value={url} />
 		</div>
 		<div class="grid gap-2">
-			<Label for="note">notes</Label>
-			<Textarea id="note" name="note" placeholder="what's good? any tips?" bind:value={note} />
+			<Label for="description">descriptions</Label>
+			<Textarea
+				id="description"
+				name="description"
+				placeholder="what's good? any tips?"
+				bind:value={description}
+			/>
 		</div>
 
 		<input type="hidden" name="id" value={id} />

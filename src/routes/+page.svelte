@@ -12,7 +12,7 @@
 <main>
 	<h1>recroll</h1>
 
-	<div class="border rounded-md p-4 mb-4">
+	<div class="border rounded-md p-4 mb-4" data-testid="create-roll-form">
 		<h2>create a rec roll</h2>
 		<form class="grid gap-4" method="POST" action="?/create">
 			<div class="grid gap-2">

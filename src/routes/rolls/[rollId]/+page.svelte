@@ -12,12 +12,12 @@
 	<a href="/"><h3 class="absolute top-4 left-4 text-muted-foreground">{'<'} more recs</h3></a>
 	<h1>{data.roll.name}</h1>
 
-	<div class="border rounded-md p-4">
+	<div class="border rounded-md p-4" data-testid="create-rec-form">
 		<h2>add a rec</h2>
 		<RecForm action="?/create" />
 	</div>
 
-	<div class="mt-2">
+	<div class="mt-2" data-testid="recs">
 		{#each data.recs as rec (rec.id)}
 			<div class="rec-card border-b py-6">
 				{#if rec.id === editingId}
@@ -47,7 +47,7 @@
 						<a href={rec.url} target="_blank">{rec.url}</a>
 					</p>
 					<p class="whitespace-pre-wrap">
-						{rec.note}
+						{rec.description}
 					</p>
 				{/if}
 			</div>
