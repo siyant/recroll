@@ -30,7 +30,6 @@
 	let showShortenedForm = rec.id == null; // for new recs, show the shortened form
 	$: showShortenedForm =
 		name.length === 0 && url.length === 0 && description.length === 0 && rating === null;
-	$: console.log('name :>>', name);
 
 	const showDeleteButton = rec.id !== null;
 </script>
