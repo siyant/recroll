@@ -29,7 +29,6 @@ export const actions: Actions = {
 			description: data.get("description"),
 			roll_id: params.rollId,
 		};
-		console.log("rec :>>", rec);
 		const { error } = await supabase.from("recs").insert(rec);
 		if (error) {
 			console.log("error :>> ", error);
@@ -37,7 +36,7 @@ export const actions: Actions = {
 			return { success: true };
 		}
 	},
-	update: async ({ request, params, locals: { supabase } }) => {
+	update: async ({ request }) => {
 		const data = await request.formData();
 
 		const recId = data.get("id");
@@ -58,7 +57,7 @@ export const actions: Actions = {
 			return { success: true };
 		}
 	},
-	delete: async ({ request, params, locals: { supabase } }) => {
+	delete: async ({ request }) => {
 		const data = await request.formData();
 
 		const recId = data.get("id");
@@ -66,7 +65,6 @@ export const actions: Actions = {
 		if (error) {
 			console.log("error :>> ", error);
 		} else {
-			console.log(request.url);
 			return { success: true };
 		}
 	},

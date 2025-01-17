@@ -6,18 +6,20 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Textarea } from '$lib/components/ui/textarea';
-	import type { Rec } from '$lib/types';
+	import type { NewRec, Rec } from '$lib/types';
 	import { Trash2 } from 'lucide-svelte';
 
-	export let rec: Rec = {
+	export let rec: Rec | NewRec = {
 		id: null,
 		name: '',
 		url: '',
-		rating: 0,
+		rating: null,
 		description: ''
 	};
 	export let action: string;
 	export let deleteAction: string | null = null;
+	export let afterSubmit: (() => void) | null = null;
+	export let onCancel: (() => void) | null = null;
 
 	let id = rec.id;
 	let name = rec.name;
@@ -27,12 +29,20 @@
 
 	let showShortenedForm = rec.id == null; // for new recs, show the shortened form
 	$: showShortenedForm =
-		name.length === 0 && url.length === 0 && description.length === 0 && rating === 0;
+		name.length === 0 && url.length === 0 && description.length === 0 && rating === null;
+	$: console.log('name :>>', name);
 
 	const showDeleteButton = rec.id !== null;
 </script>
 
-<form class="grid gap-4" method="POST" {action} use:enhance>
+<form
+	class="grid gap-4"
+	method="POST"
+	{action}
+	use:enhance={() => {
+		if (afterSubmit) afterSubmit();
+	}}
+>
 	<div class="grid gap-2">
 		<Input id="name" name="name" required placeholder="name of the thing" bind:value={name} />
 	</div>
@@ -72,7 +82,17 @@
 		</div>
 
 		<input type="hidden" name="id" value={id} />
-		<Button type="submit">save rec</Button>
+		<div class="flex gap-4">
+			<Button
+				class="flex-1"
+				variant="secondary"
+				type="reset"
+				on:click={() => {
+					if (onCancel) onCancel();
+				}}>cancel</Button
+			>
+			<Button class="flex-1" type="submit">save rec</Button>
+		</div>
 	</div>
 </form>
 

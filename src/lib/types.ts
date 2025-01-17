@@ -3,11 +3,20 @@ export interface Rec {
 	name: string;
 	url: string;
 	rating: number;
-	note: string;
+	description: string;
+}
+
+export interface NewRec {
+	id: null;
+	name: string;
+	url: string;
+	rating: number | null;
+	description: string;
 }
 
 interface Roll {
-	id: string;
+	id: number;
 	name: string;
+	description: string;
 	recs: Rec[];
 }

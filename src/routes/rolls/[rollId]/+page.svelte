@@ -21,7 +21,16 @@
 		{#each data.recs as rec (rec.id)}
 			<div class="rec-card border-b py-6">
 				{#if rec.id === editingId}
-					<RecForm action="?/update" deleteAction="?/delete" {rec} />
+					<div class="border rounded-md p-4" data-testid="create-rec-form">
+						<h2>edit rec</h2>
+						<RecForm
+							action="?/update"
+							deleteAction="?/delete"
+							{rec}
+							afterSubmit={() => (editingId = null)}
+							onCancel={() => (editingId = null)}
+						/>
+					</div>
 				{:else}
 					<h3>
 						<span class="mr-2">
@@ -36,7 +45,6 @@
 							variant="link"
 							class="py-0 h-[initial] float-right"
 							on:click={() => {
-								console.log('hi');
 								editingId = rec.id;
 							}}
 						>
